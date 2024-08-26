@@ -1,6 +1,6 @@
 from flask import *
 from pony.orm import *
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 db = Database()
@@ -79,7 +79,7 @@ def update_patient(id):
     patient.department = data.get('department', patient.department)
     patient.room = data.get('room', patient.room)
     
-    return jsonify(patient.to_dict())
+    return patient.to_dict()
 
 @app.route("/patients/<int:id>", methods=['DELETE'])
 @db_session
@@ -115,3 +115,39 @@ def add_decursus(id):
         patient=patient
     )
     return new_decursus.to_dict(), 201
+
+@app.route("/patients/without-decursus", methods=['GET'])
+@db_session
+def get_without_decursus():
+    today = date.today()
+    patients = select(p for p in Patient if not p.decursus.exists(lambda d: d.created_at.date() == today))
+
+    return jsonify([p.to_dict() for p in patients])
+
+@app.route("/patients/lowest-free", methods=['POST'])
+@db_session
+def create_patient_in_lowest_free_room():
+    occupied_rooms = select(p.room for p in Patient)
+    lowest_free_room = min(set(range(1, max(occupied_rooms) + 2)) - set(occupied_rooms))
+    data = request.get_json()
+    
+    new_patient = Patient(
+        first_name=data.get('first_name'),
+        last_name=data.get('last_name'),
+        date_of_birth=datetime.strptime(data.get('date_of_birth'), "%d.%m.%Y"),
+        reason_for_admission=data.get('reason_for_admission'),
+        time_of_admission=datetime.now(),
+        department=data.get('department'),
+        room=lowest_free_room
+    )
+    return new_patient.to_dict(), 201
+
+@app.route("/patients/<int:id>/release", methods=['PUT'])
+@db_session
+def release_patient(id):
+    patient = Patient.get(id=id)
+    if not patient:
+        return jsonify({"error": "Patient not found"}), 404
+    
+    patient.time_of_release = datetime.now()
+    return patient.to_dict()
