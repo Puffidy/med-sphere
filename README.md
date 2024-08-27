@@ -30,4 +30,5 @@ docker-compose up
 ```
 Poslije toga otvorite localhost:3000 u vašem browser-u ili importirajte `postman_collection.json` u vašoj [postman aplikaciji](https://www.postman.com/) da bi testirali API-Call-ove
 
-
+## Use-Case
+![Image of the usecase](./images/usecase.jpeg)
