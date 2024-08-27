@@ -147,6 +147,28 @@
 			"response": []
 		},
 		{
+			"name": "Move a patient to a new room",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/patients/1/move/20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"patients",
+						"1",
+						"move",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Release a patient",
 			"request": {
 				"method": "PUT",

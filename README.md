@@ -16,6 +16,7 @@ Sistem koji olakšava praćenje pacijenta. U ovom programu biti ce moguće upisa
 - `GET /patients/without-decursus`: Dohvaća sve pacijente bez obavljenog dnevnog decursusa.
 - `GET /patients/:id/decursus`: Dohvaća decursus-e za jednog pacijenta na osnovu `id` parametra u ruti.
 - `PUT /patients/:id/release`: Otpušta pacijenta postavljanjem `released_at` atribut-a.
+- `PUT /patients/:id/move/:new_room`: Prebaci pacijenta u novu sobu. Potrebni parametri su: pacijentov `id` i novi broj sobe.
 
 ## Instalacija
 ### Skidanje koda s GitHub-a 

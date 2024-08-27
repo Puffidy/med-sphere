@@ -151,3 +151,13 @@ def release_patient(id):
     
     patient.time_of_release = datetime.now()
     return patient.to_dict()
+
+@app.route("/patients/<int:id>/move/<int:new_room>", methods=['PUT'])
+@db_session
+def move_patient(id, new_room):
+    patient = Patient.get(id=id)
+    if not patient:
+        return jsonify({"error": "Patient not found"}), 404
+    
+    patient.room = new_room
+    return patient.to_dict()
